@@ -1,0 +1,27 @@
+services:
+
+  app:
+    image: flask-app
+    build: .
+
+    container_name: flask-app
+
+    ports:
+      - "5018:5000"
+
+    restart: unless-stopped
+
+    mem_limit: 256m
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5018/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
